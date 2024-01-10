@@ -1,0 +1,173 @@
+﻿@page "/home"
+@using DecorFinity2.Model
+ 
+
+
+<PageTitle>Home</PageTitle>
+<h1>Welcome to DecorFinity</h1>
+
+<div>
+    <!-- Search Input -->
+    <input @bind="SearchQuery" placeholder="Search products..." />
+
+    <!-- Product List -->
+    @if (filteredProducts.Count == 0)
+    {
+        <p>No Products Found</p>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var product in filteredProducts)
+            {
+                <div class="card shadow col-4 p-4" style="width: 18rem;">
+                    <img src="@product.Image" class="card-img-top" alt="@product.Name">
+                    <div class="card-body">
+                        <h5 class="card-title">@product.Name</h5>
+                        <div class="d-flex justify-content-between">
+                            <span>@product.Description</span>
+                            <span>@product.Price</span>
+                            <button @onclick="() => AddToCart(product)">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+    <div>
+    <h4>Shopping Cart</h4>
+    @foreach (var cartItem in Cart)
+    {
+        <div>
+            <h5>@cartItem.Name</h5>
+            <p>Quantity: @cartItem.Quantity</p>
+            <p>Subtotal: $@(cartItem.Price * cartItem.Quantity)</p>
+        </div>
+    }
+</div>
+}
+</div>
+
+
+
+
+@code {
+
+    public List<Product> products = new List<Product>()
+    {
+        new Product()
+        {
+            Id=1,
+            Name="Monitor",
+            Description="BEst Dell Monitor",
+            Price=1000,
+            Image="https://cdn.pixabay.com/photo/2016/11/29/08/41/apple-1868496_640.jpg"
+        }
+        ,
+        new Product()
+        {
+            Id=2,
+            Name="Keyboard",
+            Description="Best Logi Keyboard",
+            Price=500,
+            Image="https://cdn.pixabay.com/photo/2012/12/17/19/14/keyboard-70506_640.jpg"
+        },
+
+        new Product()
+        {
+            Id=3,
+            Name="Laptop",
+            Description="BEst laptop",
+            Price=6000,
+            Image="https://cdn.pixabay.com/photo/2015/07/17/22/43/student-849825_1280.jpg"
+        },
+
+         new Product()
+        {
+            Id=4,
+            Name="Laptop",
+            Description="BEst laptop",
+            Price=6000,
+            Image="https://cdn.pixabay.com/photo/2015/07/17/22/43/student-849825_1280.jpg"
+        },
+
+         new Product()
+        {
+            Id=5,
+            Name="Laptop",
+            Description="BEst laptop",
+            Price=6000,
+            Image="https://cdn.pixabay.com/photo/2015/07/17/22/43/student-849825_1280.jpg"
+        },
+         new Product()
+        {
+            Id=6,
+            Name="Laptop",
+            Description="BEst laptop",
+            Price=6000,
+            Image="https://cdn.pixabay.com/photo/2015/07/17/22/43/student-849825_1280.jpg"
+        },
+         new Product()
+        {
+            Id=7,
+            Name="Laptop",
+            Description="BEst laptop",
+            Price=6000,
+            Image="https://cdn.pixabay.com/photo/2015/07/17/22/43/student-849825_1280.jpg"
+        },
+         new Product()
+        {
+            Id=8,
+            Name="Laptop",
+            Description="BEst laptop",
+            Price=6000,
+            Image="https://cdn.pixabay.com/photo/2015/07/17/22/43/student-849825_1280.jpg"
+        },
+         new Product()
+        {
+            Id=9,
+            Name="Laptop",
+            Description="BEst laptop",
+            Price=6000,
+            Image="https://cdn.pixabay.com/photo/2015/07/17/22/43/student-849825_1280.jpg"
+        }
+    };
+    private List<CartItem> Cart = new List<CartItem>();
+    private string SearchQuery = "";
+
+    private List<Product> filteredProducts
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(SearchQuery))
+            {
+                return products; // Return all products if search query is empty
+            }
+            else
+            {
+                return products.Where(p => p.Name.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+        }
+    }
+
+    public void AddToCart(Product product)
+    {
+        var existingCartItem = Cart.FirstOrDefault(item => item.Id == product.Id);
+
+        if (existingCartItem != null)
+        {
+            existingCartItem.Quantity++;
+        }
+        else
+        {
+            Cart.Add(new CartItem
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Price = product.Price,
+                    Quantity = 1
+                });
+        }
+        Console.WriteLine("Product added to cart!");
+    }
+}
